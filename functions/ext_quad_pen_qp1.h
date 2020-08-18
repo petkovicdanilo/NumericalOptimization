@@ -77,7 +77,7 @@ public:
         return la::vec<real>(n, 0.5);
     }
 
-    static function<real> getFunction(){
+    static function<real> get_function(){
         return function<real>(func, gradient, hessian, starting_point);
     }
 };

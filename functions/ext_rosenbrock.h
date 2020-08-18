@@ -83,7 +83,7 @@ public:
         return z;
     }
 
-    static function<real> getFunction() {
+    static function<real> get_function() {
         return function<real>(func, gradient, hessian, starting_point);
     }
 };
