@@ -21,7 +21,7 @@ string calc_filename(method::base_method<double>* opt, line_search::base_line_se
     string lstype = typeid(*ls).name();
 
     string s = "cpp_";
-    
+
     if (typeid(func) == typeid(function::gen_rosenbrock<double>)) {
         s += "genrosenbrock";
     } else if (typeid(func) == typeid(function::ext_rosenbrock<double>)) {
@@ -31,7 +31,7 @@ string calc_filename(method::base_method<double>* opt, line_search::base_line_se
     } else if (typeid(func) == typeid(function::full_hessian2<double>)) {
         s += "fullhessian2";
     }
-    
+
     s += "_" + to_string(n) + "_";
 
     if (methodtype.find("cg_descent") != string::npos) {
@@ -88,7 +88,7 @@ int main() {
     // lsearches.push_back(new line_search::strong_wolfe<double>(params1));
 
     for (int i = 0; i < methods.size(); ++i) {
-        function::function<double> f = func::getFunction();
+        function::function<double> f = func::get_function();
 
         for (int n = 10; n <= 1000; n *= 10) {
             method::base_method<double>* opt = methods[i];

@@ -11,15 +11,17 @@ using namespace opt;
 int main() {
 	cout.precision(10);
     cout << fixed;
-	
-    const int n = 100000;
+
+    const int n = 1000;
 
     // typedef function::ext_rosenbrock<double> func;
     // typedef function::ext_himmelblau<double> func;
     // typedef function::gen_rosenbrock<double> func;
     // typedef function::raydan1<double> func;
     // typedef function::cube<double> func;
-    typedef function::full_hessian2<double> func;
+    // typedef function::full_hessian2<double> func;
+    // typedef function::ext_hiebert<double> func;
+    typedef function::bdqrtic<double> func;
     // typedef function::part_pert_quad<double> func;
     // typedef function::ext_psc1<double> func;
     // typedef function::ext_quad_pen_qp1<double> func;
@@ -49,7 +51,7 @@ int main() {
     line_search::strong_wolfe<double> ls(params);
     // line_search::approx_wolfe<double> ls(params);
 
-    function::function<double> f = func::getFunction();
+    function::function<double> f = func::get_function();
     la::vec<double> x = f.starting_point(n);
     // la::vec<double> x({1, 2, 3, 4, 5, 6});
 
