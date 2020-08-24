@@ -25,10 +25,10 @@ public:
         params = p;
     }
 
-    real operator()(function::function<real>& f, la::vec<real>& x, la::vec<real>& d) {
+    real operator()(function::function<real>& f, arma::Col<real>& x, arma::Col<real>& d) {
         this->iter_count = 0;
 
-        real pad = this->current_g_val.dot(d); // the rate at which f is growing in direction d
+        real pad = arma::dot(this->current_g_val, d); // the rate at which f is growing in direction d
         // in other words, it's an approximate value of f(x+d) - f(x)
 
         real a1 = 0, a2 = 0;

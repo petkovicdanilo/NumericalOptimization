@@ -9,7 +9,7 @@ namespace function {
 template<class real>
 class explin1 {
 public:
-    static real func(const la::vec<real>& v) {
+    static real func(const arma::Col<real>& v) {
         if (v.size() == 0)
             throw "explin1: n must be positive";
         real z = 0;
@@ -20,10 +20,10 @@ public:
         return z;
     }
 
-    static la::vec<real> gradient(const la::vec<real>& v) {
+    static arma::Col<real> gradient(const arma::Col<real>& v) {
         if (v.size() == 0)
             throw "explin1: n must be positive";
-        la::vec<real> z(v.size(), 0.0);
+        arma::Col<real> z = arma::zeros<arma::Col<real>>(v.size());
         for (size_t i=0; i<v.size()-1; i++) {
             z[i] += exp(v[i]*v[i+1] / 10) * v[i+1] / 10;
             z[i+1] += exp(v[i]*v[i+1] / 10) * v[i] / 10;
@@ -33,36 +33,37 @@ public:
         return z;
     }
 
-    static la::mat<real> hessian(const la::vec<real>& v) {
+    static arma::Mat<real> hessian(const arma::Col<real>& v) {
         if (v.size() == 0)
             throw "explin1: n must be positive";
-        la::mat<real> z(v.size(), v.size(), 0.0);
+        arma::Mat<real> z = arma::zeros<arma::Mat<real>>(v.size(), v.size());
         for (size_t i=0; i<v.size(); i++) {
             real b = v[i];
             if (i > 0) {
                 real a = v[i-1];
-                z[i][i] += a*a*exp(0.1*a*b);
+                z(i, i) += a*a*exp(0.1*a*b);
             }
             if (i+1 < v.size()) {
                 real c = v[i+1];
-                z[i][i] += c*c*exp(0.1*b*c);
+                z(i, i) += c*c*exp(0.1*b*c);
             }
         }
 
         for (size_t i=0; i<v.size()-1; i++) {
             real a = v[i];
             real b = v[i+1];
-            z[i][i+1] = (10+a*b)*exp(0.1*a*b);
-            z[i+1][i] = z[i][i+1];
+            z(i, i+1) = (10+a*b)*exp(0.1*a*b);
+            z(i+1, i) = z(i, i+1);
         }
 
         return z / (real)100;
     }
 
-    static la::vec<real> starting_point(const size_t n) {
+    static arma::Col<real> starting_point(const size_t n) {
         if (n == 0)
             throw "explin1: n must be positive";
-        return la::vec<real>(n, 0.0);
+
+        return arma::zeros<arma::Col<real>>(n);
     }
 
     static function<real> get_function() {

@@ -19,7 +19,7 @@ public:
         params = p;
     }
 
-    real operator()(function::function<real>& f, la::vec<real>& x, la::vec<real>& d) {
+    real operator()(function::function<real>& f, arma::Col<real>& x, arma::Col<real>& d) {
         this->iter_count = 0;
 
         real a = this->f_values.size() >= 2 ? this->compute_initial_step(this->f_values.end()[-1], this->f_values.end()[-2], this->current_g_val, d) : initial_step;

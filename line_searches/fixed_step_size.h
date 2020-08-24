@@ -19,8 +19,8 @@ public:
         params = p;
     }
 
-    real operator()(function::function<real>& f, la::vec<real>& x, la::vec<real>& d) {
-        la::vec<real> xx = x + d * initial_step;
+    real operator()(function::function<real>& f, arma::Col<real>& x, arma::Col<real>& d) {
+        arma::Col<real> xx = x + d * initial_step;
         this->current_f_val = f(xx);
         this->current_g_val = f.gradient(xx);
         return initial_step;

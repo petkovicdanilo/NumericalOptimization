@@ -9,7 +9,7 @@ namespace function {
 template<class real>
 class ext_quad_pen_qp2 {
 public:
-    static real func(const la::vec<real>& v){
+    static real func(const arma::Col<real>& v){
         if (v.size() == 0)
             throw "ext_quad_pen_qp2: n must be positive";
         auto n = v.size();
@@ -27,10 +27,10 @@ public:
         return s1 + s2*s2;
     }
 
-    static la::vec<real> gradient(const la::vec<real>& v){
+    static arma::Col<real> gradient(const arma::Col<real>& v){
         if (v.size() == 0)
             throw "ext_quad_pen_qp2: n must be positive";
-        la::vec<real> z(v.size(), 0.0);
+        arma::Col<real> z = arma::zeros<arma::Mat<real>>(v.size());
         for (size_t i=0; i<v.size()-1; i++)
             z[i] += 2*(2*v[i]-cos(v[i]))*(v[i]*v[i] - sin(v[i]));
         real t = -100;
@@ -41,10 +41,10 @@ public:
         return z;
     }
 
-    static la::mat<real> hessian(const la::vec<real>& v){
+    static arma::Mat<real> hessian(const arma::Col<real>& v){
         if (v.size() == 0)
             throw "ext_quad_pen_qp2: n must be positive";
-        la::mat<real> z(v.size(), v.size(), 0.0);
+        arma::Mat<real> z = arma::zeros<arma::Mat<real>>(v.size(), v.size());
 
         real sk = 0;
         for (size_t i=0; i<v.size(); i++)
@@ -52,24 +52,25 @@ public:
 
         for (size_t i=0; i<v.size(); i++)
             for (size_t j=i+1; j<v.size(); j++)
-                z[i][j] = z[j][i] = v[i]*v[j]*8;
+                z(i, j) = z(j, i) = v[i]*v[j]*8;
 
-        z[v.size()-1][v.size()-1] = 8*v[v.size()-1]*v[v.size()-1]
+        z(v.size()-1, v.size()-1) = 8*v[v.size()-1]*v[v.size()-1]
                                     + 4*(sk - 100);
 
         for (size_t i=0; i<v.size()-1; i++) {
             real a = v[i];
-            z[i][i] = 8*a*a + 4*(sk - 100) + 2*(2*a - cos(a))*(2*a - cos(a))
+            z(i, i) = 8*a*a + 4*(sk - 100) + 2*(2*a - cos(a))*(2*a - cos(a))
                       + 2*(a*a-sin(a))*(2+sin(a));
         }
 
         return z;
     }
 
-    static la::vec<real> starting_point(const size_t n) {
+    static arma::Col<real> starting_point(const size_t n) {
         if (n == 0)
             throw "ext_quad_pen_qp2: n must be positive";
-        return la::vec<real>(n, 0.5);
+
+        return 0.5 * arma::ones<arma::Col<real>>(n);
     }
 
     static function<real> get_function() {

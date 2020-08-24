@@ -9,7 +9,7 @@ namespace function {
 template<class real>
 class diagonal1 {
 public:
-    static real func(const la::vec<real>& v) {
+    static real func(const arma::Col<real>& v) {
         if (v.size() == 0)
             throw "diagonal1: n must be positive";
         real z = 0;
@@ -20,31 +20,32 @@ public:
         return z;
     }
 
-    static la::vec<real> gradient(const la::vec<real>& v) {
+    static arma::Col<real> gradient(const arma::Col<real>& v) {
         if (v.size() == 0)
             throw "diagonal1: n must be positive";
-        la::vec<real> z(v.size(), 0.0);
+        arma::Col<real> z = arma::zeros<arma::Col<real>>(v.size());
         for (size_t i=0; i<v.size(); ++i) {
             z[i] = exp(v[i]) - (i+1);
         }
         return z;
     }
 
-    static la::mat<real> hessian(const la::vec<real>& v) {
+    static arma::Mat<real> hessian(const arma::Col<real>& v) {
         if (v.size() == 0)
             throw "diagonal1: n must be positive";
-        la::mat<real> z(v.size(), v.size(), 0.0);
+        arma::Mat<real> z = arma::zeros<arma::Mat<real>>(v.size(), v.size());
         for (size_t i=0; i<v.size(); ++i) {
-            z[i][i] = exp(v[i]);
+            z(i, i) = exp(v[i]);
         }
 
         return z;
     }
 
-    static la::vec<real> starting_point(const size_t n) {
+    static arma::Col<real> starting_point(const size_t n) {
         if (n == 0)
             throw "diagonal1: n must be positive";
-        return la::vec<real>(n,1.0/n);
+
+        return (1.0 / n) * arma::ones<arma::Col<real>>(n);
     }
 
     static function<real> get_function() {

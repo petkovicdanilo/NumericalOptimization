@@ -9,7 +9,7 @@ namespace function {
 template<class real>
 class ext_himmelblau {
 public:
-    static real func(const la::vec<real>& v) {
+    static real func(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "ext_himmelblau: n must be even and positive";
         }
@@ -27,13 +27,13 @@ public:
         return z;
     }
 
-    static la::vec<real> gradient(const la::vec<real>& v) {
+    static arma::Col<real> gradient(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "ext_himmelblau: n must be even and positive";
         }
 
         size_t n = v.size();
-        la::vec<real> z(n, 0.0);
+        arma::Col<real> z = arma::zeros<arma::Col<real>>(n);
 
         for (size_t i = 0; i < n; i += 2) {
             z[i] = 4*v[i]*v[i]*v[i] + 2*v[i+1]*v[i+1] + 4*v[i]*v[i+1] - 42*v[i] - 14;
@@ -43,29 +43,29 @@ public:
         return z;
     }
 
-    static la::mat<real> hessian(const la::vec<real>& v) {
+    static arma::Mat<real> hessian(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "ext_himmelblau: n must be even and positive";
         }
 
         size_t n = v.size();
-        la::mat<real> z(n, n, 0.0);
+        arma::Mat<real> z = arma::zeros<arma::Mat<real>>(n, n);
 
         for (size_t i = 0; i < n; i += 2) {
-            z[i][i] = 12*v[i]*v[i] + 4*v[i+1] - 42;
-            z[i+1][i] = z[i][i+1] = 4*(v[i+1]+v[i]);
-            z[i+1][i+1] = 12*v[i+1]*v[i+1] + 4*v[i] - 22;
+            z(i, i) = 12*v[i]*v[i] + 4*v[i+1] - 42;
+            z(i+1, i) = z(i, i+1) = 4*(v[i+1]+v[i]);
+            z(i+1, i+1) = 12*v[i+1]*v[i+1] + 4*v[i] - 22;
         }
 
         return z;
     }
 
-    static la::vec<real> starting_point(const size_t n) {
+    static arma::Col<real> starting_point(const size_t n) {
         if (n == 0) {
             throw "ext_himmelblau: n must be even and positive";
         }
 
-        return la::vec<real>(n, 1.0);
+        return arma::ones<arma::Col<real>>(n);
     }
 
     static function<real> get_function() {

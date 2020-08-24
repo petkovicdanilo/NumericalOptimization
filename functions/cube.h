@@ -9,7 +9,7 @@ namespace function {
 template<class real>
 class cube {
 public:
-    static real func(const la::vec<real>& v) {
+    static real func(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "cube: n must be positive";
         }
@@ -25,14 +25,14 @@ public:
         return z;
     }
 
-    static la::vec<real> gradient(const la::vec<real>& v) {
+    static arma::Col<real> gradient(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "cube: n must be positive";
         }
 
         size_t n = v.size();
         size_t m = n - 1;
-        la::vec<real> z(n, 0.0);
+        arma::Col<real> z = arma::zeros<arma::Col<real>>(n);
 
         z[0] = -2*(1 - v[0]) - 600*v[0]*v[0]*(-v[0]*v[0]*v[0] + v[1]);
         for (size_t i = 1; i < m; ++i) {
@@ -43,31 +43,31 @@ public:
         return z;
     }
 
-    static la::mat<real> hessian(const la::vec<real>& v) {
+    static arma::Mat<real> hessian(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "cube: n must be positive";
         }
 
         size_t n = v.size();
         size_t m = n - 1;
-        la::mat<real> z(n, n, 0.0);
+        arma::Mat<real> z = arma::zeros<arma::Mat<real>>(n, n);
 
         for (size_t i = 0; i < m; ++i) {
-            z[i][i] = 200 + 1800*v[i]*v[i]*v[i]*v[i] - 1200*v[i]*(-v[i]*v[i]*v[i] + v[i+1]);
-            z[i][i+1] = z[i+1][i] = -600*v[i]*v[i];
+            z(i, i) = 200 + 1800*v[i]*v[i]*v[i]*v[i] - 1200*v[i]*(-v[i]*v[i]*v[i] + v[i+1]);
+            z(i, i+1) = z(i+1, i) = -600*v[i]*v[i];
         }
-        z[0][0] -= 198;
-        z[m][m] = 200;
+        z(0, 0) -= 198;
+        z(m, m) = 200;
 
         return z;
     }
 
-    static la::vec<real> starting_point(const size_t n) {
+    static arma::Col<real> starting_point(const size_t n) {
         if (n == 0) {
             throw "cube: n must be positive";
         }
 
-        la::vec<real> z(n, 0.0);
+        arma::Col<real> z = arma::zeros<arma::Col<real>>(n);
 
         for (size_t i = 0; i < n; ++i) {
             z[i] = i & 1 ? 1 : -1.2; // i & 1 != 0 <=> i is odd

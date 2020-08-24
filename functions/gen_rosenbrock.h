@@ -11,7 +11,7 @@ class gen_rosenbrock {
 public:
     static const int c = 100;
 
-    static real func(const la::vec<real>& v) {
+    static real func(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "gen_rosenbrock: n must be positive";
         }
@@ -29,14 +29,14 @@ public:
         return z;
     }
 
-    static la::vec<real> gradient(const la::vec<real>& v) {
+    static arma::Col<real> gradient(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "gen_rosenbrock: n must be positive";
         }
 
         size_t n = v.size();
         size_t m = n - 1;
-        la::vec<real> z(n, 0.0);
+        arma::Col<real> z = arma::zeros<arma::Mat<real>>(n);
 
         z[0] = c * 4 * (v[0]*v[0]*v[0] - v[0]*v[1]) - 2*(1-v[0]);
         for (size_t i = 1; i < m; ++i) {
@@ -47,39 +47,39 @@ public:
         return z;
     }
 
-    static la::mat<real> hessian(const la::vec<real>& v) {
+    static arma::Mat<real> hessian(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "gen_rosenbrock: n must be positive";
         }
 
         size_t n = v.size();
         size_t m = n - 1;
-        la::mat<real> z(n, n, 0.0);
+        arma::Mat<real> z = arma::zeros<arma::Mat<real>>(n, n);
 
         // computes first row
-        z[0][0] = 2 + 8*c*v[0]*v[0] - 4*c*(-v[0]*v[0] + v[1]);
-        z[0][1] = -4*c*v[0];
+        z(0, 0) = 2 + 8*c*v[0]*v[0] - 4*c*(-v[0]*v[0] + v[1]);
+        z(0, 1) = -4*c*v[0];
 
         // computes all rows except for first and last
         for (size_t i = 1; i < m; i++) {
-            z[i][i-1] = -4*c*v[i-1];
-            z[i][i] = 2 + 2*c + 8*c*v[i]*v[i] - 4*c*(-v[i]*v[i] + v[i+1]);
-            z[i][i+1] = -4*c*v[i];
+            z(i, i-1) = -4*c*v[i-1];
+            z(i, i) = 2 + 2*c + 8*c*v[i]*v[i] - 4*c*(-v[i]*v[i] + v[i+1]);
+            z(i, i+1) = -4*c*v[i];
         }
 
         // computes last row
-        z[m][m] = 2*c;
-        z[m][m-1] = -4*c*v[m-1];
+        z(m, m) = 2*c;
+        z(m, m-1) = -4*c*v[m-1];
 
         return z;
     }
 
-    static la::vec<real> starting_point(const size_t n) {
+    static arma::Col<real> starting_point(const size_t n) {
         if (n == 0) {
             throw "gen_rosenbrock: n must be positive";
         }
 
-        la::vec<real> z(n, 0.0);
+        arma::Col<real> z = arma::zeros<arma::Col<real>>(n);
 
         for (size_t i = 0; i < n; ++i) {
             z[i] = i & 1 ? 1 : -1.2; // i & 1 != 0 <=> i is odd

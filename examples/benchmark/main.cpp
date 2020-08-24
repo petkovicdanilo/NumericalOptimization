@@ -13,7 +13,7 @@ using namespace std;
 using namespace opt;
 
 // select a function to optimize
-typedef function::full_hessian2<double> func;
+typedef opt::function::full_hessian2<double> func;
 
 // a helper function to calculate the output filename
 string calc_filename(method::base_method<double>* opt, line_search::base_line_search<double>* ls, int n) {
@@ -22,13 +22,13 @@ string calc_filename(method::base_method<double>* opt, line_search::base_line_se
 
     string s = "cpp_";
 
-    if (typeid(func) == typeid(function::gen_rosenbrock<double>)) {
+    if (typeid(func) == typeid(opt::function::gen_rosenbrock<double>)) {
         s += "genrosenbrock";
-    } else if (typeid(func) == typeid(function::ext_rosenbrock<double>)) {
+    } else if (typeid(func) == typeid(opt::function::ext_rosenbrock<double>)) {
         s += "extrosenbrock";
-    } else if (typeid(func) == typeid(function::diagonal1<double>)) {
+    } else if (typeid(func) == typeid(opt::function::diagonal1<double>)) {
         s += "diagonal1";
-    } else if (typeid(func) == typeid(function::full_hessian2<double>)) {
+    } else if (typeid(func) == typeid(opt::function::full_hessian2<double>)) {
         s += "fullhessian2";
     }
 
@@ -88,7 +88,7 @@ int main() {
     // lsearches.push_back(new line_search::strong_wolfe<double>(params1));
 
     for (int i = 0; i < methods.size(); ++i) {
-        function::function<double> f = func::get_function();
+        opt::function::function<double> f = func::get_function();
 
         for (int n = 10; n <= 1000; n *= 10) {
             method::base_method<double>* opt = methods[i];
@@ -97,10 +97,10 @@ int main() {
             for (int j = 0; j < t; ++j) {
                 ofstream ofs(calc_filename(opt, ls, n), ofstream::app); // append to file
 
-                la::vec<double> x = f.starting_point(n);
+                arma::Col<double> x = f.starting_point(n);
                 //this_thread::sleep_for(chrono::milliseconds(500)); // rest before optimizing
                 opt->operator()(f, *ls, x);
-                ofs << opt->get_cpu_time() << "\n";
+                ofs << opt->get_f_min() << " "  << opt->get_cpu_time() << "\n";
 
                 ofs.close();
             }

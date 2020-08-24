@@ -11,7 +11,7 @@ class ext_rosenbrock {
 public:
     static const int c = 100;
 
-    static real func(const la::vec<real>& v) {
+    static real func(const arma::Col<real>& v) {
         if (v.size() % 2 || v.size() == 0) {
             throw "ext_rosenbrock: n must be even and positive";
         }
@@ -29,13 +29,13 @@ public:
         return z;
     }
 
-    static la::vec<real> gradient(const la::vec<real>& v) {
+    static arma::Col<real> gradient(const arma::Col<real>& v) {
         if (v.size() % 2 || v.size() == 0) {
             throw "ext_rosenbrock: n must be even and positive";
         }
 
         size_t n = v.size();
-        la::vec<real> z(n, 0.0);
+        arma::Col<real> z = arma::zeros<arma::Mat<real>>(n);
 
         for (size_t i = 0; i < n; i++) {
             // i & 1 != 0 <=> i is odd
@@ -46,34 +46,34 @@ public:
         return z;
     }
 
-    static la::mat<real> hessian(const la::vec<real>& v) {
+    static arma::Mat<real> hessian(const arma::Col<real>& v) {
         if (v.size() % 2 || v.size() == 0) {
             throw "ext_rosenbrock: n must be even and positive";
         }
 
         size_t n = v.size();
-        la::mat<real> z(n, n, 0.0);
+        arma::Mat<real> z = arma::zeros<arma::Mat<real>>(n, n);
 
         for (size_t i = 0; i < n; i++) {
             // i & 1 != 0 <=> i is odd
             if (i & 1) {
-                z[i][i-1] = -4*c*v[i-1];
-                z[i][i] = 2*c;
+                z(i, i-1) = -4*c*v[i-1];
+                z(i, i) = 2*c;
             } else {
-                z[i][i] = 12*c*v[i]*v[i] - 4*c*v[i+1] + 2;
-                z[i][i+1] = -4*c*v[i];
+                z(i, i) = 12*c*v[i]*v[i] - 4*c*v[i+1] + 2;
+                z(i, i+1) = -4*c*v[i];
             }
         }
 
         return z;
     }
 
-    static la::vec<real> starting_point(const size_t n) {
+    static arma::Col<real> starting_point(const size_t n) {
         if (n % 2 || n == 0) {
             throw "ext_rosenbrock: n must be even and positive";
         }
 
-        la::vec<real> z(n, 0.0);
+        arma::Col<real> z = arma::zeros<arma::Col<real>>(n);
 
         for (size_t i = 0; i < n; i += 2) {
             z[i] = -1.2;

@@ -35,7 +35,7 @@ public:
         params = p;
     }
 
-    real operator()(function::function<real>& f, la::vec<real>& x, la::vec<real>& d) {
+    real operator()(function::function<real>& f, arma::Col<real>& x, arma::Col<real>& d) {
         this->iter_count = 0;
 
         real a1 = 0;
@@ -45,7 +45,7 @@ public:
         real f1 = f0;
         real f2;
 
-        real pad0 = this->get_current_g_val().dot(d);
+        real pad0 = arma::dot(this->get_current_g_val(), d);
         real pad1 = pad0;
         real pad2;
 
@@ -54,8 +54,8 @@ public:
                 real a = a1 < a2 ? this->cubic_interpolation(a1, a2, f1, f2, pad1, pad2) : this->cubic_interpolation(a2, a1, f2, f1, pad2, pad1);
 
                 real ff = f(x + d*a);
-                la::vec<real> gr = f.gradient(x + d*a);
-                real pad = gr.dot(d);
+                arma::Col<real> gr = f.gradient(x + d*a);
+                real pad = arma::dot(gr, d);
 
                 if ((fabs(ff - f1) / (1 + fabs(ff)) < xi) || (fabs(ff - f2) / (1 + fabs(ff)) < xi)) {
                     this->set_current_f_val(ff);
@@ -92,8 +92,8 @@ public:
             ++this->iter_count;
 
             f2 = f(x + d*a2);
-            la::vec<real> gr = f.gradient(x + d*a2);
-            pad2 = gr.dot(d);
+            arma::Col<real> gr = f.gradient(x + d*a2);
+            pad2 = arma::dot(gr, d);
 
             // armijo condition: check if current iteration violates sufficient decrease
             if (f2 > f0 + pad0*steepness*a2 || (f2 >= f1 && this->iter_count > 1)) {

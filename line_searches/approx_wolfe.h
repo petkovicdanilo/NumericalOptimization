@@ -37,7 +37,7 @@ public:
         prev_step = initial_step;
     }
 
-    real operator()(function::function<real>& f, la::vec<real>& x, la::vec<real>& d) {
+    real operator()(function::function<real>& f, arma::Col<real>& x, arma::Col<real>& d) {
         this->iter_count = 0;
 
         int k = this->f_values.size();
@@ -50,17 +50,17 @@ public:
         }
         real epsilon = eps * this->c;
 
-        la::vec<real>& gr = this->current_g_val;
+        arma::Col<real>& gr = this->current_g_val;
         real phi0 = this->current_f_val;
-        real der_phi0 = gr.dot(d); // derivative of Phi(t) in point x
-        
+        real der_phi0 = arma::dot(gr, d); // derivative of Phi(t) in point x
+
         real c; // initial() out parameter
         real phi_c; // initial() out parameter
 
         initial(f, x, phi0, gr, der_phi0, d, k, prev_step, c, phi_c);
-        
-        la::vec<real> grad_c = f.gradient(x + d * c);
-        real der_phi_c = grad_c.dot(d); // derivative of Phi(c) in point x
+
+        arma::Col<real> grad_c = f.gradient(x + d * c);
+        real der_phi_c = arma::dot(grad_c, d); // derivative of Phi(c) in point x
 
         real aj; // bracket() out parameter
         real bj; // bracket() out parameter
@@ -68,7 +68,7 @@ public:
         real val_bj; // bracket() out parameter
         real der_aj; // bracket() out parameter
         real der_bj; // bracket() out parameter
-        
+
         bracket(c, phi0, phi_c, der_phi0, der_phi_c, f, x, d, 5, epsilon, aj, bj, val_aj, der_aj, val_bj, der_bj);
 
         real phi2;
@@ -97,13 +97,13 @@ public:
             real der_b; // secant2() out parameter
 
             secant2(aj, bj, val_aj, der_aj, val_bj, der_bj, f, phi0, x, d, epsilon, a, b, val_a, der_a, val_b, der_b);
-                
+
             if (b - a > gamma * (bj - aj)) {
                 c = (a + b) / 2.0;
                 // all after eps are out parameters
                 update(a, b, c, val_a, der_a, val_b, der_b, phi0, f, x, d, epsilon, a, b, val_a, der_a, val_b, der_b, phi_c, der_phi_c, grad_c);
             }
-                
+
             aj = a;
             bj = b;
             val_aj = val_a;
@@ -113,7 +113,7 @@ public:
         }
     }
 private:
-    void initial(function::function<real>& f, la::vec<real>& x, real phi0, la::vec<real>& der0, real der_phi0, la::vec<real>& dir, size_t k, real c_old, real& c, real& phi_c) {
+    void initial(function::function<real>& f, arma::Col<real>& x, real phi0, arma::Col<real>& der0, real der_phi0, arma::Col<real>& dir, size_t k, real c_old, real& c, real& phi_c) {
         real psi0 = 0.01;
         real psi1 = 0.1;
         real psi2 = 2;
@@ -126,7 +126,7 @@ private:
                     nonZeroX = false;
                 }
             }
-            
+
             if (nonZeroX) {
                 // I0.0
                 real res1 = fabs(x[0]);
@@ -144,7 +144,7 @@ private:
 
             if (phi0 != 0.0) {
                 // I0.1
-                real norm = la::norm(der0);
+                real norm = arma::norm(der0);
                 c = psi0 * fabs(phi0) / (norm*norm);
                 phi_c = f(x + dir * c);
                 return;
@@ -177,7 +177,7 @@ private:
         phi_c = f(x + dir * c);
     }
 
-    void bracket(real c, real phi0, real phi_c, real der_phi0, real der_phi_c, function::function<real>& f, la::vec<real>& x, la::vec<real>& dir, real range_expansion, real eps, real& a_, real& b_, real& val_a_, real& der_a_, real& val_b_, real& der_b_) {
+    void bracket(real c, real phi0, real phi_c, real der_phi0, real der_phi_c, function::function<real>& f, arma::Col<real>& x, arma::Col<real>& dir, real range_expansion, real eps, real& a_, real& b_, real& val_a_, real& der_a_, real& val_b_, real& der_b_) {
         real cj = c;
         real ci = 0;
 
@@ -210,9 +210,9 @@ private:
             }
 
             cj *= range_expansion;
-            la::vec<real> xx = x + dir * cj;
+            arma::Col<real> xx = x + dir * cj;
             phi_j = f(xx);
-            der_j = f.gradient(xx).dot(dir);
+            der_j = arma::dot(f.gradient(xx), dir);
         }
     }
 
@@ -221,11 +221,11 @@ private:
         return (a * der_b - b * der_a) / d;
     }
 
-    void secant2(real a, real b, real val_a, real der_a, real val_b, real der_b, function::function<real>& f, real phi0, la::vec<real>& x, la::vec<real>& dir, real eps, real& a_, real& b_, real& val_a_, real& der_a_, real& val_b_, real& der_b_) {
+    void secant2(real a, real b, real val_a, real der_a, real val_b, real der_b, function::function<real>& f, real phi0, arma::Col<real>& x, arma::Col<real>& dir, real eps, real& a_, real& b_, real& val_a_, real& der_a_, real& val_b_, real& der_b_) {
         real c = secant(a, b, der_a, der_b);
 
         real t1, t2;
-        la::vec<real> t3;
+        arma::Col<real> t3;
 
         update(a, b, c, val_a, der_a, val_b, der_b, phi0, f, x, dir, eps, a_, b_, val_a_, der_a_, val_b_, der_b_, t1, t2, t3);
 
@@ -251,12 +251,12 @@ private:
     }
 
     void update(real a, real b, real c, real val_a, real der_a, real val_b, real der_b,
-                real phi0, function::function<real>& f, la::vec<real>& x, la::vec<real>& dir, real eps,
-                real& a_, real& b_, real& val_a_, real& der_a_, real& val_b_, real& der_b_, real& phi_c, real& der_phi_c, la::vec<real>& grad_c) {
-        la::vec<real> xx = x + dir * c;
+                real phi0, function::function<real>& f, arma::Col<real>& x, arma::Col<real>& dir, real eps,
+                real& a_, real& b_, real& val_a_, real& der_a_, real& val_b_, real& der_b_, real& phi_c, real& der_phi_c, arma::Col<real>& grad_c) {
+        arma::Col<real> xx = x + dir * c;
         phi_c = f(xx);
         grad_c = f.gradient(xx);
-        der_phi_c = grad_c.dot(dir);
+        der_phi_c = arma::dot(grad_c, dir);
 
         // U0
         if (c <= a || c >= b) {
@@ -297,15 +297,15 @@ private:
         }
     }
 
-    void update3(real a, real b, real val_a, real der_a, real val_b, real der_b, real phi0, function::function<real>& f, la::vec<real>& x, la::vec<real>& dir, real eps, real& a_, real& b_, real& val_a_, real& der_a_, real& val_b_, real& der_b_) {
+    void update3(real a, real b, real val_a, real der_a, real val_b, real der_b, real phi0, function::function<real>& f, arma::Col<real>& x, arma::Col<real>& dir, real eps, real& a_, real& b_, real& val_a_, real& der_a_, real& val_b_, real& der_b_) {
         a_ = a;
         b_ = b;
 
         while (1) {
             real d = (1 - theta) * a_ + theta * b_;
-            la::vec<real> xx = x + dir * d;
+            arma::Col<real> xx = x + dir * d;
             real phi_d = f(xx);
-            real der_phi_d = f.gradient(xx).dot(dir);
+            real der_phi_d = arma::dot(f.gradient(xx), dir);
 
             // U3a
             if (der_phi_d >= 0) {

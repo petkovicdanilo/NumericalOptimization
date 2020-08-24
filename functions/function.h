@@ -1,7 +1,7 @@
 #ifndef PROJEKATC___FUNCTION_H
 #define PROJEKATC___FUNCTION_H
 
-#include "../utilities/linear_algebra.h"
+#include <armadillo>
 
 namespace opt {
 namespace function {
@@ -9,29 +9,29 @@ namespace function {
 template<class real>
 class function {
 public:
-	using func = real(*)(const la::vec<real>&);
-	using grad = la::vec<real>(*)(const la::vec<real>&);
-	using hess = la::mat<real>(*)(const la::vec<real>&);
-	using start = la::vec<real>(*)(const size_t);
+	using func = real(*)(const arma::Col<real>&);
+	using grad = arma::Col<real>(*)(const arma::Col<real>&);
+	using hess = arma::Mat<real>(*)(const arma::Col<real>&);
+	using start = arma::Col<real>(*)(const size_t);
 
 	function(func f, grad g, hess h, start s) : f(f), g(g), h(h), s(s), call_count(0), grad_count(0), hess_count(0) {}
 
-	real operator()(const la::vec<real>& x) {
+	real operator()(const arma::Col<real>& x) {
 		++call_count;
 		return f(x);
 	}
 
-	la::vec<real> gradient(const la::vec<real>& x) {
+	arma::Col<real> gradient(const arma::Col<real>& x) {
 		++grad_count;
 		return g(x);
 	}
 
-	la::mat<real> hessian(const la::vec<real>& x) {
+	arma::Mat<real> hessian(const arma::Col<real>& x) {
 		++hess_count;
 		return h(x);
 	}
 
-	la::vec<real> starting_point(const size_t n) {
+	arma::Col<real> starting_point(const size_t n) {
 		return s(n);
 	}
 

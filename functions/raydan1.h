@@ -4,13 +4,12 @@
 #include <cmath>
 #include "function.h"
 
-namespace opt {
-namespace function {
+namespace opt::function{
 
 template<class real>
 class raydan1 {
 public:
-    static real func(const la::vec<real>& v) {
+    static real func(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "raydan1: n must be positive";
         }
@@ -25,13 +24,13 @@ public:
         return z;
     }
 
-    static la::vec<real> gradient(const la::vec<real>& v) {
+    static arma::Col<real> gradient(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "raydan1: n must be positive";
         }
 
         size_t n = v.size();
-        la::vec<real> z(n, 0.0);
+        arma::Col<real> z = arma::zeros<arma::Col<real>>(n);
 
         for (size_t i = 0; i < n; ++i) {
             z[i] = ((i+1) / 10.0) * (exp(v[i]) - 1);
@@ -40,27 +39,27 @@ public:
         return z;
     }
 
-    static la::mat<real> hessian(const la::vec<real>& v) {
+    static arma::Mat<real> hessian(const arma::Col<real>& v) {
         if (v.size() == 0) {
             throw "raydan1: n must be positive";
         }
 
         size_t n = v.size();
-        la::mat<real> z(n, n, 0.0);
+        arma::Mat<real> z = arma::zeros<arma::Mat<real>>(n, n);
 
         for (size_t i = 0; i < n; ++i) {
-            z[i][i] = ((i+1) / 10.0) * exp(v[i]);
+            z(i, i) = ((i+1) / 10.0) * exp(v[i]);
         }
 
         return z;
     }
 
-    static la::vec<real> starting_point(const size_t n) {
+    static arma::Col<real> starting_point(const size_t n) {
         if (n == 0) {
             throw "raydan1: n must be positive";
         }
 
-        return la::vec<real>(n, 1.0);
+        return arma::ones<arma::Col<real>>(n);
     }
 
     static function<real> get_function() {
@@ -68,7 +67,6 @@ public:
     }
 };
 
-}
 }
 
 #endif // RAYDAN1_H_INCLUDED

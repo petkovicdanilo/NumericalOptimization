@@ -2,9 +2,9 @@
 #define PROJEKATC___BASE_METHOD_H
 
 #include <chrono>
+#include <armadillo>
 #include "../functions/function.h"
 #include "../line_searches/base_line_search.h"
-#include "../utilities/linear_algebra.h"
 
 namespace opt {
 namespace method {
@@ -17,7 +17,7 @@ public:
                     h_call_count(0), gr_norm(-1), f_min(0), cpu_time(0),
                     epsilon(epsilon), max_iter(max_iter), working_precision(working_precision) {}
 
-    virtual void operator()(function::function<real>& f, line_search::base_line_search<real>& ls, la::vec<real>& x) = 0;
+    virtual void operator()(function::function<real>& f, line_search::base_line_search<real>& ls, arma::Col<real>& x) = 0;
 
     real get_epsilon() const {
         return epsilon;

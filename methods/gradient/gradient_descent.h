@@ -15,24 +15,24 @@ public:
     gradient_descent(real epsilon, size_t max_iter) : base_method<real>(epsilon, max_iter) {}
     gradient_descent(real epsilon, size_t max_iter, real working_precision) : base_method<real>(epsilon, max_iter, working_precision) {}
 
-    void operator()(function::function<real>& f, line_search::base_line_search<real>& ls, la::vec<real>& x) {
+    void operator()(function::function<real>& f, line_search::base_line_search<real>& ls, arma::Col<real>& x) {
         this->iter_count = 0;
         ls.clear_f_vals();
-        
+
         this->tic();
 
         real f_curr = f(x);
         real f_prev = f_curr + 1; // should always pass the first working precision condition
 
-        la::vec<real> gr = f.gradient(x);
+        arma::Col<real> gr = f.gradient(x);
 
-        while (la::norm(gr) > this->epsilon && this->iter_count < this->max_iter && fabs(f_prev-f_curr)/(1+fabs(f_curr)) > this->working_precision) {
+        while (arma::norm(gr) > this->epsilon && this->iter_count < this->max_iter && fabs(f_prev-f_curr)/(1+fabs(f_curr)) > this->working_precision) {
             ++this->iter_count;
             ls.push_f_val(f_curr);
             ls.set_current_f_val(f_curr);
             ls.set_current_g_val(gr);
 
-            la::vec<real> d = -gr; // set direction to negative gradient
+            arma::Col<real> d = -gr; // set direction to negative gradient
             x += d * ls(f, x, d); // move x in accordance with the line search
 
             f_prev = f_curr;
@@ -42,7 +42,7 @@ public:
 
         this->toc();
         this->f_min = f_curr;
-        this->gr_norm = la::norm(gr);
+        this->gr_norm = arma::norm(gr);
         this->f_call_count = f.get_call_count();
         this->g_call_count = f.get_grad_count();
         this->h_call_count = f.get_hess_count();

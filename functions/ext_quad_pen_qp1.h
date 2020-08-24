@@ -9,7 +9,7 @@ namespace function {
 template<class real>
 class ext_quad_pen_qp1 {
 public:
-    static real func(const la::vec<real>& v) {
+    static real func(const arma::Col<real>& v) {
         if (v.size() == 0)
             throw "ext_quad_pen_qp1: n must be positive";
         auto n = v.size();
@@ -27,11 +27,11 @@ public:
         return s1 + s2*s2;
     }
 
-    static la::vec<real> gradient(const la::vec<real>& v) {
+    static arma::Col<real> gradient(const arma::Col<real>& v) {
         if (v.size() == 0)
             throw "ext_quad_pen_qp1: n must be positive";
 
-        la::vec<real> z(v.size(), 0.0);
+        arma::Col<real> z = arma::zeros<arma::Col<real>>(v.size());
 
         real sum_sq = -0.5;
         for (size_t i=0; i<v.size(); ++i)
@@ -46,12 +46,12 @@ public:
         return z;
     }
 
-    static la::mat<real> hessian(const la::vec<real>& v) {
+    static arma::Mat<real> hessian(const arma::Col<real>& v) {
         if (v.size() == 0)
             throw "ext_quad_pen_qp1: n must be positive";
 
 
-        la::mat<real> z(v.size(), v.size(), 0.0);
+        arma::Mat<real> z = arma::zeros<arma::Mat<real>>(v.size(), v.size());
 
         real sum_sq = -0.5;
         for (size_t i=0; i<v.size(); ++i)
@@ -60,21 +60,22 @@ public:
         for(int i=0;i<n;++i){
             for(int j=0;j<n;++j){
                 if(i==j){
-                    z[i][i] = 4*(3*v[i]*v[i] - 2) + 4*(2*v[i]*v[i] + sum_sq);
+                    z(i, i) = 4*(3*v[i]*v[i] - 2) + 4*(2*v[i]*v[i] + sum_sq);
                 }else{
-                    z[i][j] = 8*v[i]*v[j];
+                    z(i, j) = 8*v[i]*v[j];
                 }
             }
         }
-        z[n-1][n-1]-=4*(3*v[n-1]*v[n-1] - 2);
+        z(n-1, n-1)-=4*(3*v[n-1]*v[n-1] - 2);
 
         return z;
     }
 
-    static la::vec<real> starting_point(const size_t n) {
+    static arma::Col<real> starting_point(const size_t n) {
         if (n == 0)
             throw "ext_quad_pen_qp1: n must be positive";
-        return la::vec<real>(n, 0.5);
+
+        return 0.5 * arma::ones<arma::Col<real>>(n);
     }
 
     static function<real> get_function(){

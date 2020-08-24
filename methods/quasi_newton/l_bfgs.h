@@ -24,33 +24,33 @@ public:
     l_bfgs(size_t cache_size, real epsilon, size_t max_iter) : base_method<real>(epsilon, max_iter), cache_size(cache_size) {}
     l_bfgs(size_t cache_size, real epsilon, size_t max_iter, real working_precision) : base_method<real>(epsilon, max_iter, working_precision), cache_size(cache_size) {}
 
-    void operator()(function::function<real>& f, line_search::base_line_search<real>& ls, la::vec<real>& x) {
+    void operator()(function::function<real>& f, line_search::base_line_search<real>& ls, arma::Col<real>& x) {
         this->iter_count = 0;
         ls.clear_f_vals();
-        
+
         this->tic();
 
-        la::vec<real> x0;
-        la::vec<real>& x1 = x;
-        la::vec<real> gradient_prev;
-        la::vec<real> gradient_curr = f.gradient(x1);
+        arma::Col<real> x0;
+        arma::Col<real>& x1 = x;
+        arma::Col<real> gradient_prev;
+        arma::Col<real> gradient_curr = f.gradient(x1);
 
         real H = 1;
 
         real fcur = f(x1);
         real fprev = fcur + 1;
 
-        std::list<la::vec<real>> s_cache, y_cache;
+        std::list<arma::Col<real>> s_cache, y_cache;
         std::list<real> rho_cache;
 
 
-        while (la::norm(gradient_curr) > this->epsilon && this->iter_count < this->max_iter && fabs(fprev-fcur)/(1+fabs(fcur)) > this->working_precision) {
+        while (arma::norm(gradient_curr) > this->epsilon && this->iter_count < this->max_iter && fabs(fprev-fcur)/(1+fabs(fcur)) > this->working_precision) {
             ++this->iter_count;
             ls.push_f_val(fcur);
             ls.set_current_f_val(fcur);
             ls.set_current_g_val(gradient_curr);
 
-            la::vec<real> direction = this->two_loop_recursion(H,gradient_curr,s_cache,y_cache,rho_cache);
+            arma::Col<real> direction = this->two_loop_recursion(H,gradient_curr,s_cache,y_cache,rho_cache);
 
             fprev = fcur;
             x0 = x1;
@@ -62,37 +62,36 @@ public:
             fcur = ls.get_current_f_val();
             gradient_curr = ls.get_current_g_val();
 
-            la::vec<real> s = x1 - x0;
+            arma::Col<real> s = x1 - x0;
             this->add_to_cache(s,s_cache);
-            la::vec<real> y = gradient_curr - gradient_prev;
+            arma::Col<real> y = gradient_curr - gradient_prev;
             this->add_to_cache(y,y_cache);
 
-            real rho = 1/(s.dot(y));
+            real rho = 1/(arma::dot(s, y));
             this->add_to_cache(rho,rho_cache);
 
-            H = (s.dot(y))/(y.dot(y));
+            H = (arma::dot(s, y))/(arma::dot(y, y));
         }
 
         this->toc();
         this->f_min = fcur;
-        this->gr_norm = la::norm(gradient_curr);
+        this->gr_norm = arma::norm(gradient_curr);
         this->f_call_count = f.get_call_count();
         this->g_call_count = f.get_grad_count();
         this->h_call_count = f.get_hess_count();
     }
 private:
-    la::vec<real> two_loop_recursion(real H, la::vec<real>& gradient, std::list<la::vec<real>>& s_cache, std::list<la::vec<real>>& y_cache, std::list<real>& rho_cache){
+    arma::Col<real> two_loop_recursion(real H, arma::Col<real>& gradient, std::list<arma::Col<real>>& s_cache, std::list<arma::Col<real>>& y_cache, std::list<real>& rho_cache){
 
         std::list<real> alphas;
-        la::vec<real> q = gradient;
-
+        arma::Col<real> q = gradient;
 
         auto r_s = s_cache.rbegin();
         auto r_y = y_cache.rbegin();
         auto r_rho = rho_cache.rbegin();
 
         while(r_s!= s_cache.rend()){
-            real alpha = (*r_rho) * r_s->dot(q);
+            real alpha = (*r_rho) * arma::dot(*r_s, q);
             alphas.push_front(alpha);
 
             q -= (*r_y)*alpha;
@@ -102,7 +101,7 @@ private:
             ++r_rho;
 
         }
-        la::vec<real> direction = q * H;
+        arma::Col<real> direction = q * H;
 
         auto s = s_cache.begin();
         auto y = y_cache.begin();
@@ -110,7 +109,7 @@ private:
         auto alpha = alphas.begin();
 
         while(s!=s_cache.end()){
-            real beta = (*rho) * y->dot(direction);
+            real beta = (*rho) * arma::dot(*y, direction);
             direction += (*s) * ((*alpha) - beta);
 
             ++s;

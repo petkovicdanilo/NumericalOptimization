@@ -17,7 +17,7 @@ public:
     cg_descent(real eta, real delta, real epsilon, size_t max_iter, real working_precision)
         : base_method<real>(epsilon, max_iter, working_precision), eta(eta), delta(delta) {}
 
-    void operator()(function::function<real>& f, line_search::base_line_search<real>& ls, la::vec<real>& x) {
+    void operator()(function::function<real>& f, line_search::base_line_search<real>& ls, arma::Col<real>& x) {
         this->iter_count = 0;
         ls.clear_f_vals();
 
@@ -26,15 +26,15 @@ public:
         real f_curr = f(x);
         real f_prev = f_curr + 1;
 
-        la::vec<real> gr = f.gradient(x);
-        la::vec<real> gr_old;
+        arma::Col<real> gr = f.gradient(x);
+        arma::Col<real> gr_old;
 
-        la::vec<real> pk = -gr;
+        arma::Col<real> pk = -gr;
 
         real q = 0.0;
         real c = 0.0;
 
-        while (la::norm(gr) > this->epsilon && this->iter_count < this->max_iter && fabs(f_prev-f_curr)/(1+fabs(f_curr)) > this->working_precision) {
+        while (arma::norm(gr) > this->epsilon && this->iter_count < this->max_iter && fabs(f_prev-f_curr)/(1+fabs(f_curr)) > this->working_precision) {
             ++this->iter_count;
 
             f_prev = f_curr;
@@ -55,11 +55,11 @@ public:
             gr = ls.get_current_g_val();
 
             // compute beta
-            real eta_k = -1.0 / (la::norm(pk) * fmin(eta, la::norm(gr)));
-            la::vec<real> yk = gr - gr_old;
-            real py = pk.dot(yk);
-            real yk_norm = la::norm(yk);
-            real beta_cgd = fmax(eta_k, (1.0/py)*gr.dot(yk-pk*2*yk_norm*yk_norm/py));
+            real eta_k = -1.0 / (arma::norm(pk) * fmin(eta, arma::norm(gr)));
+            auto yk = gr - gr_old;
+            real py = arma::dot(pk, yk);
+            real yk_norm = arma::norm(yk);
+            real beta_cgd = fmax(eta_k, (1.0/py)*arma::dot(gr, yk-pk*2*yk_norm*yk_norm/py));
 
             pk *= beta_cgd;
             pk -= gr;
@@ -67,7 +67,7 @@ public:
 
         this->toc();
         this->f_min = f_curr;
-        this->gr_norm = la::norm(gr);
+        this->gr_norm = arma::norm(gr);
         this->f_call_count = f.get_call_count();
         this->g_call_count = f.get_grad_count();
         this->h_call_count = f.get_hess_count();

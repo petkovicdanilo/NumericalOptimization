@@ -5,7 +5,7 @@
 #include <map>
 #include <cmath>
 #include <vector>
-#include "../utilities/linear_algebra.h"
+#include <armadillo>
 #include "../functions/function.h"
 
 namespace opt {
@@ -16,7 +16,7 @@ class base_line_search {
 public:
     base_line_search() : iter_count(0), c(0.0) {}
 
-    virtual real operator()(function::function<real>& f, la::vec<real>& x, la::vec<real>& d) = 0;
+    virtual real operator()(function::function<real>& f, arma::Col<real>& x, arma::Col<real>& d) = 0;
 
     size_t get_iter_count() const {
         return iter_count;
@@ -30,11 +30,11 @@ public:
         current_f_val = f_val;
     }
 
-    la::vec<real> get_current_g_val() const {
+    arma::Col<real> get_current_g_val() const {
         return current_g_val;
     }
 
-    void set_current_g_val(la::vec<real> g_val) {
+    void set_current_g_val(arma::Col<real> g_val) {
         current_g_val = g_val;
     }
 
@@ -53,7 +53,7 @@ protected:
     size_t iter_count; // number of iterations in the line search (inner) loop
     std::vector<real> f_values; // list of all function values from previous iterations
     real current_f_val; // the current operating function value of x; used to exchange data between the method and the line search
-    la::vec<real> current_g_val; // the current operating gradient value of x; used to exchange data between the method and the line search
+    arma::Col<real> current_g_val; // the current operating gradient value of x; used to exchange data between the method and the line search
     real c; // number based on f_curr only used in approx_wolfe line search passed from cg_descent method
 
     // Copies pairs from the second to the first map. Used in concrete constructors to override
@@ -91,8 +91,8 @@ protected:
     // lecture "The Initial Step Length", chapter 3, page 58.
     // Must be used starting from the second iteration of the outer loop as
     // f_prev is required.
-    real compute_initial_step(real f_curr, real f_prev, la::vec<real> grad, la::vec<real> d) {
-        return fmin(1.0, 1.01*fabs(2*(f_curr-f_prev)/d.dot(grad)));
+    real compute_initial_step(real f_curr, real f_prev, arma::Col<real> grad, arma::Col<real> d) {
+        return fmin(1.0, 1.01*fabs(2*(f_curr-f_prev)/arma::dot(d, grad)));
     }
 };
 
