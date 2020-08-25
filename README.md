@@ -55,8 +55,9 @@ We will describe steps to set up `Visual Studio` project. Other CMake targets ar
 
 1. Install [CMake](https://cmake.org/download/) for Windows
 1. Install Visual Studio C++ tools (including MSVC v142 C++ build tools)
-1. Download `Armadillo` archive from [here](http://arma.sourceforge.net/download.html) and extract it to
-`C:\Program files`
+1. Download `Armadillo` archive from [here](http://arma.sourceforge.net/download.html) and extract its content to
+`C:\Program files\Armadillo`
+1. Make `lib_win64` directory in `C:\Program files\Armadillo`
 1. Download `OpenBLAS` from [here](https://github.com/xianyi/OpenBLAS/releases) (compiled library, not source code) and copy `lib\libopenblas.lib` to `C:\Program files\Armadillo\lib_win64`
 1. Open `cmake-gui` and set your source and build directory to location where you cloned this repository
 1. Run Configure and enter your Visual Studio version\
