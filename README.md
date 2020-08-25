@@ -57,18 +57,21 @@ We will describe steps to set up `Visual Studio` project. Other CMake targets ar
 1. Install Visual Studio C++ tools (including MSVC v142 C++ build tools)
 1. Download `Armadillo` archive from [here](http://arma.sourceforge.net/download.html) and extract it to
 `C:\Program files`
-1. Download `OpenBLAS` from [here](https://github.com/xianyi/OpenBLAS/releases) and extract all `dll` and `lib` files to `C:\Program files\Armadillo\lib_win64`
+1. Download `OpenBLAS` from [here](https://github.com/xianyi/OpenBLAS/releases) (compiled library, not source code) and copy `lib\libopenblas.lib` to `C:\Program files\Armadillo\lib_win64`
 1. Open `cmake-gui` and set your source and build directory to location where you cloned this repository
 1. Run Configure and enter your Visual Studio version\
 **Note**: Here you can configure targets other than Visual Studio
 1. Run Generate
 1. Now you can open generated Visual Studio solution.\
 For some reason Visual Studio sometimes doesn't see additional include and library directories listed in CMake script. In that case these steps should be done as well.
-1. Right click on `numopt` project and open Properties\
+1. Do this for every project (except meta ones like 'ALL_BUILD' and 'ZERO_CHECK')\
+Right click on project and open Properties\
 **Note**: Make sure you set up this for all configurations.
    - under `C/C++ -> General -> Additional Include Directories` add `C:\Program files\Armadillo\include`
    - under `Linker -> General -> Additional Library Directories` add `C:\Program files\Armadillo\lib_win64`
    - under `Linker -> Input -> Additional Dependencies` add `libopenblas.lib`
+1. For every executable, copy `bin\libopenblas.dll` from `OpenBLAS` archive to folder where that executable is built.
+1. (Optional) Manually recreate `numopt` project directory structure in Visual Studio with filters and adding existing files.
 
 **Note:** Any project modifications should be done through CMake. Visual Studio solution and other generated files are ignored by `git`.
 
