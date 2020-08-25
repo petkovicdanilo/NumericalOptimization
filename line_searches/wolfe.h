@@ -23,7 +23,7 @@ public:
         p["steepness"] = 1e-4;
         p["initial_step"] = 1;
         p["sigma"] = 0.9;
-        p["xi"] = 1e-3;
+        p["xi"] = 1e-14;
         p["max_step"] = 1e10;
         p["step_factor"] = 10;
         this->rest(p, params);
