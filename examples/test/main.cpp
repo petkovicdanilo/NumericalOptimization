@@ -16,10 +16,10 @@ int main() {
 
     // typedef opt::function::ext_rosenbrock<double> func;
     // typedef opt::function::ext_himmelblau<double> func;
-    //typedef opt::function::gen_rosenbrock<double> func;
+    // typedef opt::function::gen_rosenbrock<double> func;
     // typedef opt::function::raydan1<double> func;
     // typedef opt::function::cube<double> func;
-     typedef opt::function::full_hessian2<double> func;
+    typedef opt::function::full_hessian2<double> func;
     // typedef opt::function::ext_hiebert<double> func;
     // typedef opt::function::part_pert_quad<double> func;
     // typedef opt::function::ext_psc1<double> func;
@@ -28,6 +28,11 @@ int main() {
     // typedef opt::function::diagonal1<double> func;
     // typedef opt::function::gen_psc1<double> func;
     // typedef opt::function::fletchcr<double> func;
+    // typedef opt::function::arglinb<double> func;
+    // typedef opt::function::bdqrtic<double> func;
+    // typedef opt::function::ext_hiebert<double> func;
+    // typedef opt::function::ext_tridiag1<double> func;
+    // typedef opt::function::gen_white_holst<double> func;
 
     // method::gradient::gradient_descent<double> opt;
     // method::gradient::momentum<double> opt;
@@ -39,7 +44,7 @@ int main() {
     // method::quasi_newton::sr1<double> opt;
     // method::quasi_newton::dfp<double> opt;
     // method::quasi_newton::bfgs<double> opt;
-    //method::quasi_newton::l_bfgs<double> opt;
+    // method::quasi_newton::l_bfgs<double> opt;
 
     map<string, double> params;
     // line_search::binary<double> ls(params);
