@@ -13,5 +13,8 @@
 #include "methods/quasi_newton/bfgs.h"
 #include "methods/quasi_newton/l_bfgs.h"
 #include "methods/newton/newton_line_search.h"
+#include "methods/modified_newton/goldstein_price.h"
+#include "methods/modified_newton/levenberg.h"
+#include "methods/modified_newton/levenberg_marquardt.h"
 
 #endif //PROJEKATC___METHODS_H
