@@ -103,6 +103,24 @@ Right click on project and open Properties\
 - Strong Wolfe
 - Approx. Wolfe
 
+## Future steps
+
+- add missing methods and functions
+- make python bindings
+  - simpler interface to library, easier to call methods with python code, rather than compiling cpp program
+  - it may be easier to use [xtensor](https://github.com/xtensor-stack/xtensor) instead of armadillo for integration with numpy
+    - benchmark performance between armadillo and xtensor
+- GUI desktop application (cross platform)
+  - mimic vilin GUI functionalities
+  - [electron](https://www.electronjs.org/) app
+    - good choice because it provides cross platform app using web technologies
+    - has mature and interactive graphing and visualization tools ([chartjs](https://www.chartjs.org/))
+    - try writing it in Typescript to avoid pain :smiley:
+  - python
+    - integration with matplotlib and above described python bindings
+    - [Tkinter](https://docs.python.org/3/library/tkinter.html)
+    - PyQT
+
 ## Authors
 
 * **Ivan Stosic** - ivan100sic@gmail.com
