@@ -16,10 +16,10 @@ int main() {
 
     // typedef opt::function::ext_rosenbrock<double> func;
     // typedef opt::function::ext_himmelblau<double> func;
-    // typedef opt::function::gen_rosenbrock<double> func;
+    typedef opt::function::gen_rosenbrock<double> func;
     // typedef opt::function::raydan1<double> func;
     // typedef opt::function::cube<double> func;
-    typedef opt::function::full_hessian2<double> func;
+    // typedef opt::function::full_hessian2<double> func;
     // typedef opt::function::ext_hiebert<double> func;
     // typedef opt::function::part_pert_quad<double> func;
     // typedef opt::function::ext_psc1<double> func;
@@ -37,7 +37,7 @@ int main() {
     // method::gradient::gradient_descent<double> opt;
     // method::gradient::momentum<double> opt;
     // method::conjugate_gradient::fletcher_reeves<double> opt;
-     method::conjugate_gradient::polak_ribiere<double> opt;
+    method::conjugate_gradient::polak_ribiere<double> opt;
     // method::conjugate_gradient::hestenes_stiefel<double> opt;
     // method::conjugate_gradient::dai_yuan<double> opt;
     // method::conjugate_gradient::cg_descent<double> opt;
@@ -45,13 +45,17 @@ int main() {
     // method::quasi_newton::dfp<double> opt;
     // method::quasi_newton::bfgs<double> opt;
     // method::quasi_newton::l_bfgs<double> opt;
+    // method::newton::newton_line_search<double> opt;
+    // method::modified_newton::goldstein_price<double> opt;
+    // method::modified_newton::levenberg<double> opt;
+    // method::modified_newton::levenberg_marquardt<double> opt;
 
     map<string, double> params;
     // line_search::binary<double> ls(params);
     // line_search::fixed_step_size<double> ls(params);
     // line_search::armijo<double> ls(params);
     // line_search::goldstein<double> ls(params);
-    //line_search::wolfe<double> ls(params);
+    // line_search::wolfe<double> ls(params);
      line_search::strong_wolfe<double> ls(params);
     // line_search::approx_wolfe<double> ls(params);
 
