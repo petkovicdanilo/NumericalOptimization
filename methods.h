@@ -12,5 +12,6 @@
 #include "methods/quasi_newton/dfp.h"
 #include "methods/quasi_newton/bfgs.h"
 #include "methods/quasi_newton/l_bfgs.h"
+#include "methods/newton/newton_line_search.h"
 
 #endif //PROJEKATC___METHODS_H
