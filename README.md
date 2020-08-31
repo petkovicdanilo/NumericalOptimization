@@ -92,6 +92,11 @@ Right click on project and open Properties\
   - DFP
   - BFGS
   - L-BFGS
+- Newton line search
+- Modified Newton
+  - Goldstein-Price
+  - Levenberg
+  - Levenberg-Marquardt
 
 ## Line Search methods
 
