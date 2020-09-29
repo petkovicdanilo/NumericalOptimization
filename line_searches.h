@@ -8,5 +8,6 @@
 #include "line_searches/wolfe.h"
 #include "line_searches/strong_wolfe.h"
 #include "line_searches/approx_wolfe.h"
+#include "line_searches/nonmonotone.h"
 
 #endif //PROJEKATC___LINE_SEARCHES_H

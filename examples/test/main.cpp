@@ -12,11 +12,15 @@ int main() {
 	cout.precision(10);
     cout << fixed;
 
-    const int n = 1000;
+    const int n = 100;
 
     // typedef opt::function::ext_rosenbrock<double> func;
     // typedef opt::function::ext_himmelblau<double> func;
-    typedef opt::function::gen_rosenbrock<double> func;
+     typedef opt::function::quartc<double> func;
+    // typedef opt::function::ext_maratos<double> func;
+    // typedef opt::function::ext_tridiag2<double> func;
+    // typedef opt::function::ext_white_holst<double> func;
+    // typedef opt::function::diagonal4<double> func;
     // typedef opt::function::raydan1<double> func;
     // typedef opt::function::cube<double> func;
     // typedef opt::function::full_hessian2<double> func;
@@ -36,8 +40,10 @@ int main() {
 
     // method::gradient::gradient_descent<double> opt;
     // method::gradient::momentum<double> opt;
+     method::gradient::barzilai_borwein<double> opt;
+    // method::gradient::scalar_correction<double> opt;
     // method::conjugate_gradient::fletcher_reeves<double> opt;
-    method::conjugate_gradient::polak_ribiere<double> opt;
+    // method::conjugate_gradient::polak_ribiere<double> opt;
     // method::conjugate_gradient::hestenes_stiefel<double> opt;
     // method::conjugate_gradient::dai_yuan<double> opt;
     // method::conjugate_gradient::cg_descent<double> opt;
@@ -56,19 +62,21 @@ int main() {
     // line_search::armijo<double> ls(params);
     // line_search::goldstein<double> ls(params);
     // line_search::wolfe<double> ls(params);
-     line_search::strong_wolfe<double> ls(params);
+    // line_search::strong_wolfe<double> ls(params);
     // line_search::approx_wolfe<double> ls(params);
+     line_search::nonmonotone<double> ls(params);
 
     opt::function::function<double> f = func::get_function();
-    arma::Col<double> x = f.starting_point(n);
+    arma::Col<double> x = f.starting_point(n);    
+   
     // arma::Col<double> x({1, 2, 3, 4, 5, 6});
 
-    // cout << "x:" << "\n" << x << "\n";
-    // cout << "func(x):" << "\n" << func::func(x) << "\n";
-    // cout << "grad(x):" << "\n" << func::gradient(x) << "\n";
-    // cout << "hess(x):" << "\n" << func::hessian(x) << "\n"; return 0;
+     /*cout << "x:" << "\n" << x << "\n";
+     cout << "func(x):" << "\n" << func::func(x) << "\n";
+     cout << "grad(x):" << "\n" << func::gradient(x) << "\n";
+     cout << "hess(x):" << "\n" << func::hessian(x) << "\n"; return 0;*/
 
-    cout << "n: " << n << "\n";
+    //cout << "n: " << n << "\n";
     cout << "Line search parameters:\n";
     for (auto e : params) {
         cout << e.first << ": " << e.second << "\n";

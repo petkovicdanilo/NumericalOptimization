@@ -3,6 +3,8 @@
 
 #include "methods/gradient/gradient_descent.h"
 #include "methods/gradient/momentum.h"
+#include "methods/gradient/barzilai_borwein.h"
+#include "methods/gradient/scalar_correction.h"
 #include "methods/conjugate_gradient/fletcher_reeves.h"
 #include "methods/conjugate_gradient/polak_ribiere.h"
 #include "methods/conjugate_gradient/hestenes_stiefel.h"

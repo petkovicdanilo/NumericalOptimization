@@ -21,5 +21,10 @@
 #include "functions/gen_white_holst.h"
 #include "functions/part_pert_quad.h"
 #include "functions/raydan1.h"
+#include "functions/diagonal4.h"
+#include "functions/ext_maratos.h"
+#include "functions/ext_tridiag2.h"
+#include "functions/ext_white_holst.h"
+#include "functions/quartc.h"
 
 #endif //PROJEKATC___FUNCTIONS_H

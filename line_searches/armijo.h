@@ -53,7 +53,7 @@ public:
 
                 a_new = (-quadr + sqrt(quadr * quadr - 3 * cubic * pad)) / (3 * cubic);
             }
-
+           
             a_prev = a_curr;
             a_curr = a_new;
 
