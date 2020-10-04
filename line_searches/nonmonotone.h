@@ -77,6 +77,7 @@ namespace opt
 					f_prev = f_curr;
 					f_curr = f(x + a_new * d);
 					curr_values.push_back(f_curr);
+
 					// calculating new maximum of last M iterations and erasing first value if needed	
 					if (curr_values.size() > M) // f_values should not contain values from more then last M iterations
 					{

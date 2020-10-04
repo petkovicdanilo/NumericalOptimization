@@ -18,5 +18,7 @@
 #include "methods/modified_newton/goldstein_price.h"
 #include "methods/modified_newton/levenberg.h"
 #include "methods/modified_newton/levenberg_marquardt.h"
+#include "methods/trust_region/dogleg.h"
+#include "methods/trust_region/doglegSR1.h"
 
 #endif //PROJEKATC___METHODS_H

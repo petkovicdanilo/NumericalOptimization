@@ -27,7 +27,7 @@ namespace opt
 				for (size_t i = 0; i < n ; i+=2)
 				{
 					real t = v[i] * v[i] * v[i];
-					z += c * v[ i + 1]*v[i+1] + c *t*t  - 2 *c*v[i+1]* t+1+v[i]*v[i]-2*v[i];
+					z += c * v[i + 1]*v[i+1] + c *t*t  - 2 *c*v[i+1]*t + 1 + v[i]*v[i] - 2*v[i];
 				}
 
 				return z;
@@ -64,7 +64,7 @@ namespace opt
 					z(i, i) =30*c*p*p-12*c*v[i]*v[i+1]+2;
 					z(i, i + 1) = -6*c*p;
 					z(i + 1, i) = z(i,i+1);
-					z(i + 1, i + 1) = 2*c*v[i+1];
+					z(i + 1, i + 1) = 2*c;
 				}
 				return z;
 			}
@@ -73,6 +73,7 @@ namespace opt
 			{
 				if (n <= 0 || n % 2)
 					throw "ext_white_holst: n must be even and positive";
+				
 				arma::Col<real>z(n);
 
 				for (size_t i = 0; i < n; i += 2)
