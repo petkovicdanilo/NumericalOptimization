@@ -17,13 +17,13 @@ int main() {
     // typedef opt::function::ext_rosenbrock<double> func;
     // typedef opt::function::ext_himmelblau<double> func;
     // typedef opt::function::quartc<double> func;
-    // typedef opt::function::ext_maratos<double> func;
+     typedef opt::function::ext_maratos<double> func;
     // typedef opt::function::ext_tridiag2<double> func;
     // typedef opt::function::ext_white_holst<double> func;
     // typedef opt::function::diagonal4<double> func;
     // typedef opt::function::raydan1<double> func;
     // typedef opt::function::cube<double> func;
-     typedef opt::function::full_hessian2<double> func;
+    // typedef opt::function::full_hessian2<double> func;
     // typedef opt::function::ext_hiebert<double> func;
     // typedef opt::function::part_pert_quad<double> func;
     // typedef opt::function::ext_psc1<double> func;
@@ -39,7 +39,7 @@ int main() {
 
     // method::gradient::gradient_descent<double> opt;
     // method::gradient::momentum<double> opt;
-    // method::gradient::barzilai_borwein<double> opt;
+     method::gradient::barzilai_borwein<double> opt;
     // method::gradient::scalar_correction<double> opt;
     // method::conjugate_gradient::fletcher_reeves<double> opt;
     // method::conjugate_gradient::polak_ribiere<double> opt;
@@ -56,7 +56,7 @@ int main() {
     // method::modified_newton::levenberg_marquardt<double> opt;
 
     // method::trust_region::dogleg<double> opt;
-     method::trust_region::doglegSR1<double> opt;
+   //  method::trust_region::doglegSR1<double> opt;
 
     map<string, double> params;
     // line_search::binary<double> ls(params);
@@ -66,7 +66,7 @@ int main() {
     // line_search::wolfe<double> ls(params);
     // line_search::strong_wolfe<double> ls(params);
     // line_search::approx_wolfe<double> ls(params);
-    // line_search::nonmonotone<double> ls(params);
+     line_search::nonmonotone<double> ls(params);
 
     opt::function::function<double> f = func::get_function();
     arma::Col<double> x = f.starting_point(n);    
@@ -85,9 +85,9 @@ int main() {
         cout << e.first << ": " << e.second << "\n";
     }*/
 
-    // opt(f, ls, x);
+     opt(f, ls, x);
 
-     opt(f, x); // for trust region methods 
+    // opt(f, x); // for trust region methods 
 
     cout << "xMin: [";
     if (x.size() >= 4) {
