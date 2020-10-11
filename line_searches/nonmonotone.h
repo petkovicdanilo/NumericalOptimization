@@ -83,11 +83,9 @@ namespace opt
 					{
 						curr_values.erase(f_values.begin());
 
-						{
-							maxval = curr_values[0];
-							for (size_t i = 1; i < curr_values.size(); i++)
-								if (curr_values[i] > maxval)maxval = curr_values[i];
-						}
+						maxval = curr_values[0];
+						for (size_t i = 1; i < curr_values.size(); i++)
+							if (curr_values[i] > maxval)maxval = curr_values[i];
 					}
 					else
 					{
